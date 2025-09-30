@@ -15,7 +15,7 @@ findById = (req, res) => {
 }
 
 addUser = (req, res) => {
-    const { name, email} = req.body
+    const { name, email, age} = req.body
     //Validar que se añade el nombre y el correo 
     if (!name || !email) {
         return res.status(400).json({message: "El nombre y el email son obligatorios"});
@@ -27,15 +27,36 @@ addUser = (req, res) => {
         return res.status(400).json({message: "Formato de email no válido"});
     }
 
+    //Validar que la edad sea un número entero positivo
+    if (age <= 0) {
+        return res.status(400).json({message: "La edad debe ser mayor a 0"});
+    }
 
     const newUser = User.addUser(req.body);
     res.status(201).json(newUser); //Se devuelve el estado 201, creado 
 }
 
 updateUser = (req, res) => {
-    const updateUs = User.updateUser(req.params.id, req.body);
+    const {email, age} = req.body;
 
-    if(!updateUs) return res.status.json({message: "Usuario no encontrado"});
+    //Validación del correo al actualizar
+    if (email) {
+        const emailVal = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailVal.test(email)) {
+            return res.status(400).json({message: "Formato de email no válido"});
+        }
+    }
+
+    //Validación de edad al actualizar
+    if (age <= 0) {
+        return res.status(400).json({message: "La edad debe ser mayor a 0"});
+    }
+
+    const updateUs = User.updateUser(req.params.id, req.body);
+    if(!updateUs) {
+        return res.status.json({message: "Usuario no encontrado"});
+    }
+
     res.status(200).json({message: "Se actualizo el usuario", user: updateUs});
 }
 
