@@ -10,7 +10,9 @@ findAll = (req, res) => {
 
 findById = (req, res) => {
     const data = User.findById(req.params.id);
-    if (!data) return res.status(404).json({message: "Usuario no encontrado"}); //Se devuelve al estado 404 no encontrado
+    if (!data) {
+        return res.status(404).json({message: "Usuario no encontrado"}); //Se devuelve al estado 404 no encontrado
+    }
     res.status(200).json(data);
 }
 
@@ -37,7 +39,12 @@ addUser = (req, res) => {
 }
 
 updateUser = (req, res) => {
-    const {email, age} = req.body;
+    const {name, email, age} = req.body;
+
+    //Validar que esten el nombre y el correo
+    if (!name || !email) {
+        return res.status(400).json({message: "El nombre y el email son obligatorios"});
+    }
 
     //Validación del correo al actualizar
     if (email) {
@@ -56,7 +63,7 @@ updateUser = (req, res) => {
     if(!updateUs) {
         return res.status.json({message: "Usuario no encontrado"});
     }
-
+    
     res.status(200).json({message: "Se actualizo el usuario", user: updateUs});
 }
 
