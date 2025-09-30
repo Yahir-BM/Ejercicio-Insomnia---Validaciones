@@ -2,19 +2,27 @@ const User = require('../models/user.model');
 
 findAll = (req, res) => {
     const data = User.findAll();
+    if (!data || data.length === 0) {
+        return res.status(200).json({message: "No hay usuarios registrados"})
+    }
     res.status(200).json(data); //Devolver estado 200 OK
 }
 
 findById = (req, res) => {
     const data = User.findById(req.params.id);
-
-    if (!data) return res.status(404).json({message: "Usuario no encontrado"});
+    if (!data) return res.status(404).json({message: "Usuario no encontrado"}); //Se devuelve al estado 404 no encontrado
     res.status(200).json(data);
 }
 
 addUser = (req, res) => {
-    const newUser = User.addUser(req.body);
+    const { name, email} = req.body
 
+    if (!name || !email) {
+        return res.status(400).json({message: "El nombre y el email son obligatorios"});
+    }
+
+
+    const newUser = User.addUser(req.body);
     res.status(201).json(newUser); //Se devuelve el estado 201, creado 
 }
 
@@ -26,3 +34,4 @@ updateUser = (req, res) => {
 }
 
 module.exports = {findAll, findById, addUser, updateUser};
+

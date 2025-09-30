@@ -33,7 +33,7 @@ function findAll(){
 }
 
 //Función buscar por id
-function findById(){
+function findById(id){
     return users.find(user => user.id === id) || null;
 }
 
