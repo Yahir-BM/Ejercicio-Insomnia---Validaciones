@@ -16,9 +16,15 @@ findById = (req, res) => {
 
 addUser = (req, res) => {
     const { name, email} = req.body
-
+    //Validar que se añade el nombre y el correo 
     if (!name || !email) {
         return res.status(400).json({message: "El nombre y el email son obligatorios"});
+    }
+
+    //Validar la estructura del correo
+    const emailVal = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal.test(email)) {
+        return res.status(400).json({message: "Formato de email no válido"});
     }
 
 
